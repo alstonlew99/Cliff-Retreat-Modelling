@@ -1,4 +1,6 @@
 {
   "WAVEHEIGHT": 5,
-  "SLOPE": 0.02
+  "SLOPE": 0.02,
+  "DECAY_COEFFICIENT": 0.1,
+  "TIDAL_RANGE": 2
 }
