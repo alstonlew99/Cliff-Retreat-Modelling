@@ -2,9 +2,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 
-from rockcoast.Tidal import TIDAL_RANGE
-
-with open('config.json', 'r') as f:
+with open('../rockcoast/config.json', 'r') as f:
     config = json.load(f)
 TIDAL_RANGE=config['TIDAL_RANGE']
 

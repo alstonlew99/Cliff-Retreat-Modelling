@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 '''
 Waves
 '''
-with open('config.json', 'r') as f:
+with open('../rockcoast/config.json', 'r') as f:
     config = json.load(f)
 SLOPE = config['SLOPE']
 

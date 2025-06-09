@@ -2,7 +2,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 
-with open('config.json', 'r') as f:
+with open('../rockcoast/config.json', 'r') as f:
     config = json.load(f)
 # set up the geometry wher Z is elevation and X is cross-shore distance
 SLOPE = config['SLOPE']
