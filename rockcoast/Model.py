@@ -3,10 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib import rc
+from tqdm import tqdm
 rc("font", size=16)
-from ipywidgets import FloatProgress
-from IPython.display import display
-# The main model goes here as a python class
+
+
 class RockCoast:
 
     # setup an initialisation function
@@ -50,21 +50,35 @@ class RockCoast:
         self.PlotInterval = 100.
 
     # this function runs the model
-    def RunModel(self):
+    def RunModel(self, plot=True):
+        """
+        Run the coastal retreat simulation.
 
-        # Create a progress bar to show the model is working
-        f = FloatProgress(min=self.Time, max=self.EndTime)
-        display(f)
+        Parameters
+        ----------
+        plot : bool
+            If True, show plots during simulation.
+            If False, skip plotting (for testing or non-GUI environments).
+
+        Returns
+        -------
+        dict
+            Dictionary with key results (for testing).
+        """
+
+        progress_bar = tqdm(total=int(self.EndTime - self.Time),
+                            desc="Running Cliff Retreat Simulation", ncols=80)
 
         # set up a figure for plotting the profile results
-        fig1, ax1 = plt.subplots(figsize=(16, 6))
-        ax1.set_xlabel("Distance (m)")
-        ax1.set_ylabel("Elevation (m)")
+        if plot:
+            fig1, ax1 = plt.subplots(figsize=(16, 6))
+            ax1.set_xlabel("Distance (m)")
+            ax1.set_ylabel("Elevation (m)")
 
-        # set up a figure for plotting the profile results
-        fig2, ax2 = plt.subplots(figsize=(10, 6))
-        ax2.set_xlabel("Time (years)")
-        ax2.set_ylabel("Retreat Rate (m/y)")
+            # set up a figure for plotting the profile results
+            fig2, ax2 = plt.subplots(figsize=(10, 6))
+            ax2.set_xlabel("Time (years)")
+            ax2.set_ylabel("Retreat Rate (m/y)")
 
         # some lists for plotting
         Times = []
@@ -91,7 +105,7 @@ class RockCoast:
         # calculate the distribution of weathering rates
         WeatheringEfficacy[0:MaxWeatheringInd] = self.MaxWeatheringEfficacy * np.exp(
             -((IntertidalElevations[0:MaxWeatheringInd] - 0.25 * self.TidalRange) ** 2.) / (
-                        0.1 * 0.25 * self.TidalRange))
+                    0.1 * 0.25 * self.TidalRange))
         WeatheringEfficacy[MaxWeatheringInd:] = self.MaxWeatheringEfficacy * np.exp(
             -(0.25 * self.TidalRange - IntertidalElevations[MaxWeatheringInd:]) ** 2. / (0.25 * self.TidalRange))
         WeatheringEfficacy = WeatheringEfficacy[::-1]
@@ -151,39 +165,26 @@ class RockCoast:
 
             # plot the model progress
             if self.Time == 0:
-
-                # plot the profile
-                ax1.plot(self.X, self.Z, color=cm.coolwarm(self.Time / self.EndTime))
+                if plot:
+                    ax1.plot(self.X, self.Z, color=cm.coolwarm(self.Time / self.EndTime))
                 Times.append(self.PlotTime)
                 LastCliffPosition = MaxIntertidalX
                 LastTime = self.Time
-
-                # plt.plot(x[i_sealevel],z[i_sealevel],'ro',markersize=10)
-                # plt.plot([x[0],x[0]],[z[0],z[0]+5.0],color=[t_ime/t_max,0.5,0.5])
-
-                # update plot time
                 self.PlotTime += self.PlotInterval
-
-                # update progress bar
-                f.value = self.Time
+                progress_bar.update(self.dt)
 
             elif self.Time >= self.PlotTime:
-                # plot the profile
-                ax1.plot(self.X, self.Z, color=cm.coolwarm(self.Time / self.EndTime))
+                if plot:
+                    ax1.plot(self.X, self.Z, color=cm.coolwarm(self.Time / self.EndTime))
                 Times.append(self.PlotTime)
-
-                # get rates and update saved position
 
                 Rate = (MaxIntertidalX - LastCliffPosition) / (self.Time - LastTime)
                 Rates.append(Rate)
                 LastCliffPosition = MaxIntertidalX
                 LastTime = self.Time
 
-                # update plot time
                 self.PlotTime += self.PlotInterval
-
-                # update progress bar
-                f.value = self.Time
+                progress_bar.update(self.PlotInterval)
 
             # update time
             self.Time += self.dt
@@ -196,14 +197,24 @@ class RockCoast:
                 self.Z += self.EarthquakeUplift
                 self.EarthquakeTime += self.EarthquakeInterval
 
+        progress_bar.close()
+
         # add colour bar for time to plot
-        sm = plt.cm.ScalarMappable(cmap=cm.coolwarm, norm=plt.Normalize(vmin=min(Times), vmax=max(Times)))
-        cbar = plt.colorbar(sm, ax=ax1)
-        cbar.set_label("Time (years)")
+        if plot:
+            sm = plt.cm.ScalarMappable(cmap=cm.coolwarm, norm=plt.Normalize(vmin=min(Times), vmax=max(Times)))
+            cbar = plt.colorbar(sm, ax=ax1)
+            cbar.set_label("Time (years)")
 
-        # finish second plot with cliff retreat rates
-        ax2.plot(Times[1:], Rates, 'k--', lw=2)
-        ax2.set_xlabel("Time (years)")
-        ax2.set_ylabel("Cliff Retreat Rate (m/y)")
-        ax2.set_ylim(0, np.max(Rates) * 2)
+            # finish second plot with cliff retreat rates
+            ax2.plot(Times[1:], Rates, 'k--', lw=2)
+            ax2.set_xlabel("Time (years)")
+            ax2.set_ylabel("Cliff Retreat Rate (m/y)")
+            ax2.set_ylim(0, np.max(Rates) * 2)
 
+        return {
+            "Times": np.array(Times),
+            "Rates": np.array(Rates),
+            "X": self.X.copy(),
+            "Z": self.Z.copy(),
+            "SeaLevel": self.SeaLevel,
+        }
