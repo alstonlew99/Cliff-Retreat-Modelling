@@ -69,8 +69,6 @@ tutorial.md — step-by-step introduction
 
 how_to_guides.md — practical tasks and workflows
 
-explanation.md — physical model and numerical rationale
-
 reference.md — parameter and API reference
 
 ## Author
