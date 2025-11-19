@@ -8,7 +8,7 @@ This project includes:
 
 1.A numerical model of cliff retreat (rockcoast/Model.py)
 
-2.A configuration file for environmental parameters (rockcoast/config.json)
+2.A default configuration file for environmental parameters (config.json)
 
 3.An execution script (rockcoast/Run_Cliff_Retreat.py)
 
@@ -27,14 +27,34 @@ pip install -r requirements.txt
 Ensure your environment has Python ≥ 3.9, numpy, matplotlib, and tqdm.
 
 ## Running the simulation
-From the project root:
+The simulation script uses a JSON configuration file to define all environmental and physical parameters.
+
+By default, it loads the configuration file:
+
+config.json
+
+
+However, you can also provide your own configuration file using the --config (or -c) argument.
+
+### Run using the default configuration
 ```
 python rockcoast/Run_Cliff_Retreat.py
+```
+### Run using a custom configuration file
+
+If you want to test different environmental scenarios, simply create your own JSON file and pass its path:
+```
+python rockcoast/Run_Cliff_Retreat.py --config path/to/my_config.json
+```
+
+For example:
+```
+python rockcoast/Run_Cliff_Retreat.py --config configs/high_wave_scenario.json
 ```
 
 The program will:
 
-Read parameters from *config.json*
+Read parameters from JSON file
 
 Initialize the RockCoast model
 
