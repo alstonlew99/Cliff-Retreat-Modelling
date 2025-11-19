@@ -211,6 +211,24 @@ class RockCoast:
             ax2.set_ylabel("Cliff Retreat Rate (m/y)")
             ax2.set_ylim(0, np.max(Rates) * 2)
 
+        # Save figures to /output folder
+
+        if plot:
+            import os
+            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+            output_dir = os.path.join(project_root, "output")
+
+            os.makedirs(output_dir, exist_ok=True)
+
+            fig1_path = os.path.join(output_dir, "coastal_profile.png")
+            fig2_path = os.path.join(output_dir, "retreat_rate.png")
+
+            fig1.savefig(fig1_path, dpi=300, bbox_inches="tight")
+            fig2.savefig(fig2_path, dpi=300, bbox_inches="tight")
+
+            print(f"Saved: {fig1_path}")
+            print(f"Saved: {fig2_path}")
+
         return {
             "Times": np.array(Times),
             "Rates": np.array(Rates),

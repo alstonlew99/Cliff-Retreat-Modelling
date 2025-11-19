@@ -60,6 +60,8 @@ Initialize the RockCoast model
 
 Simulate coastal profile evolution through time
 
+Save the output plots into the /output folder
+
 Display:
 
 **A time-colored elevation profile**

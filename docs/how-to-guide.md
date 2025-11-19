@@ -82,30 +82,6 @@ Each section starts with a question like “How do I…?” and provides the min
 5. Run the simulation.
 6. Notice that after the specified time, the coastline shifts upward — erosion slows temporarily as waves reach a lower level.
 
----
-
-## How to export results automatically
-
-**Goal:** Save computed arrays (e.g., retreat rates) to a CSV file.
-
-### Steps
-
-1. In `Model.py`, find the end of the `RunModel()` function.
-2. Before the `return` statement, insert:
-   ```python
-   import pandas as pd
-   pd.DataFrame({
-       "Times": Times,
-       "Rates": Rates,
-       "X": self.X,
-       "Z": self.Z
-   }).to_csv("cliff_Retreat_results.csv", index=False)
-   ```
-3. Run the simulation as usual.
-4. Check that `output_results.csv` appears in the working directory.
-5. Open it in Excel or a plotting tool to analyze the time–rate relationship.
-
----
 
 ## Summary
 

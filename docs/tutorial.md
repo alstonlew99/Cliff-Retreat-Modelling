@@ -29,7 +29,7 @@ Cliff_Retreat_Simulation/
 ├── rockcoast/
 │   ├── Model.py
 │   ├── Run_Cliff_Retreat.py
-│   └── config.json
+├── config.json
 └── tests/
 ```
 
