@@ -1,4 +1,4 @@
-# 📘 Tutorial: Run Your First Cliff Retreat Simulation
+# Tutorial: Run Your First Cliff Retreat Simulation
 
 Welcome!  
 In this tutorial, you’ll **build and run your first cliff erosion simulation** using the *Cliff Retreat Simulation* project.  
@@ -143,7 +143,7 @@ tests/test_physical_consistency.py ....                    [100%]
 =================== 4 passed in 5.32s =====================
 ```
 
-If all tests pass — your setup is correct ✅.
+If all tests pass — your setup is correct.
 
 ---
 
@@ -159,7 +159,7 @@ Every change teaches you something about how coastal processes interact.
 
 ---
 
-## ✅ Summary
+## Summary
 
 By completing this tutorial, you have:
 1. Installed and configured the simulation  
