@@ -68,6 +68,49 @@ Display:
 
 **A cliff retreat rate vs. time plot**
 
+## Understanding the Output Figures
+
+After the simulation runs, two figures are saved in the `output/` directory.  
+These plots summarize how the coastline evolves and how erosion intensity changes through time.
+
+---
+
+### **1. Coastal Profile Evolution (`coastal_profile.png`)**
+
+This figure shows **how the cliff shape evolves over the entire simulation period**.
+
+**Vertical axis:** ground elevation (meters)  
+**Horizontal axis:** distance inland from the original shoreline  
+**Each colored line:** coastal profile at a specific simulation time  
+**Color map:** cool → early years, warm → later years  
+
+**How to interpret the plot:**
+
+If the colored lines move **towards the right**, the coastline is retreating inland.  
+Steeper segments represent **more resistant rock**; flatter or shifting areas show **strong erosion**.  
+If you see an abrupt upward shift of the entire profile, this corresponds to a **tectonic uplift event**.
+
+This plot provides a visual overview of **long-term coastline shape change** and how waves, sea-level variation, and tectonics interact.
+
+---
+
+### **2. Cliff Retreat Rate (`retreat_rate.png`)**
+
+This plot tracks the **rate at which the cliff retreats** over time.
+
+**Horizontal axis:** simulation time (years)  
+**Vertical axis:** retreat rate (meters per year)  
+**Dashed line:** change of erosion intensity across time  
+
+**How to interpret the plot:**
+
+High values indicate periods of **strong wave-driven erosion**.  
+Lower values correspond to slower retreat, often due to **more resistant material** or **tectonic uplift** reducing wave impact.  
+A sudden drop in retreat rate after an uplift event is normal because the cliff is temporarily raised above the active wave zone.
+
+This plot is useful for determining **when erosion is strongest** and for comparing different environmental scenarios across simulations.
+
+
 ## Configuration
 Simulation parameters are defined in rockcoast/config.json.
 Each parameter controls a physical aspect of the model:
