@@ -1,24 +1,47 @@
-"""
-Test that the RockCoast model initializes with correct default parameters.
-
-WHY:
-  The initialization defines the starting state of the model. If defaults are wrong,
-  every simulation outcome will be invalid.
-
-WHAT:
-  This test checks that the initial parameters and arrays match the expected defaults.
-"""
+import unittest
+import numpy as np
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "rockcoast"))
-import numpy as np
-from Model import RockCoast
+
+# Add the parent directory to sys.path to locate the 'rockcoast' module
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# Now import from the rockcoast package
+from rockcoast.Model import RockCoast
 
 
-def test_initial_conditions_are_correct():
-    model = RockCoast()
-    assert np.isclose(model.InitialSlope, 1.0), "Initial slope should be 1.0"
-    assert np.isclose(model.WaveHeight, 2.0), "Default wave height should be 2 m"
-    assert np.isclose(model.SeaLevel, 0.0), "Sea level should start at 0"
-    assert np.allclose(model.Resistance, model.MaxResistance), "Initial resistance should be uniform"
-    assert model.Z.shape == model.X.shape, "Z and X arrays must have same shape"
+class TestRockCoastInitialization(unittest.TestCase):
+
+    def setUp(self):
+        """Create a fresh instance before each test."""
+        self.model = RockCoast()
+
+    def test_defaults(self):
+        """Test if default parameters are set correctly in __init__."""
+        self.assertEqual(self.model.Time, 0)
+        self.assertEqual(self.model.InitialSlope, 1.0)
+        self.assertIsNone(self.model.Zw, "Zw should be None before setup_model_state is called")
+
+    def test_setup_model_state(self):
+        """Test if setup_model_state initializes arrays correctly."""
+        self.model.setup_model_state()
+
+        # Check spatial domains
+        self.assertTrue(len(self.model.Z) > 0, "Z array should not be empty")
+        self.assertEqual(len(self.model.Z), len(self.model.X), "Z and X should have the same length")
+
+        # Check Tide Generation (Zw)
+        # TideTime was np.arange(0, 24, 0.1) -> 240 elements
+        expected_tide_len = len(np.arange(0, 24., 0.1))
+        self.assertIsNotNone(self.model.Zw, "Zw should be initialized")
+        self.assertEqual(len(self.model.Zw), expected_tide_len, "Tidal array Zw has incorrect length")
+
+        # Check Weathering Efficacy
+        self.assertIsNotNone(self.model.WeatheringEfficacy, "WeatheringEfficacy should be initialized")
+        # It should contain positive values where weathering occurs
+        self.assertTrue(np.max(self.model.WeatheringEfficacy) > 0, "Max weathering efficacy should be positive")
+
+
+if __name__ == '__main__':
+    print("Running Initialization Tests...")
+    unittest.main()

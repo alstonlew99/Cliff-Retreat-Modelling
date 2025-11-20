@@ -55,6 +55,11 @@ Creates a new model instance with default settings.
 
 Runs the time-evolution of the cliff profile.
 
+### Class: `RockCoast`
+
+Main class representing the coastal system.  
+Encapsulates physical parameters, state variables, and the simulation loop.
+
 ##### Signature
 ```python
 result = model.RunModel(plot=True)
